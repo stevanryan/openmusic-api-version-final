@@ -1,3 +1,4 @@
+const autoBind = require('auto-bind');
 const ClientError = require('../../exceptions/ClientError');
 
 class AlbumsHandler {
@@ -6,10 +7,7 @@ class AlbumsHandler {
     this._albumValidator = albumValidator;
 
     // Melakukan binding function.
-    this.postAlbumHandler = this.postAlbumHandler.bind(this);
-    this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
-    this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
-    this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
+    autoBind(this);
   }
 
   async postAlbumHandler(request, h) {
