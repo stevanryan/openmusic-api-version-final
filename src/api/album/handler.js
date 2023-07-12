@@ -1,9 +1,9 @@
 const ClientError = require('../../exceptions/ClientError');
 
 class AlbumsHandler {
-  constructor(service, validator) {
-    this._service = service;
-    this._validator = validator;
+  constructor(albumService, albumValidator) {
+    this._albumService = albumService;
+    this._albumValidator = albumValidator;
 
     // Melakukan binding function.
     this.postAlbumHandler = this.postAlbumHandler.bind(this);
@@ -15,11 +15,11 @@ class AlbumsHandler {
   async postAlbumHandler(request, h) {
     try {
       // Validasi data input.
-      this._validator.validateAlbumPayload(request.payload);
+      this._albumValidator.validateAlbumPayload(request.payload);
 
       const { name, year } = request.payload;
 
-      const albumId = await this._service.addAlbum({ name, year });
+      const albumId = await this._albumService.addAlbum({ name, year });
 
       const response = h.response({
         status: 'success',
@@ -54,7 +54,7 @@ class AlbumsHandler {
   async getAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
-      const album = await this._service.getAlbumById(id);
+      const album = await this._albumService.getAlbumById(id);
 
       return {
         status: 'success',
@@ -86,10 +86,10 @@ class AlbumsHandler {
   async putAlbumByIdHandler(request, h) {
     try {
       // Validasi data input.
-      this._validator.validateAlbumPayload(request.payload);
+      this._albumValidator.validateAlbumPayload(request.payload);
 
       const { id } = request.params;
-      await this._service.editAlbumById(id, request.payload);
+      await this._albumService.editAlbumById(id, request.payload);
 
       return {
         status: 'success',
@@ -118,7 +118,7 @@ class AlbumsHandler {
 
   async deleteAlbumByIdHandler(request, h) {
     try {
-      await this._service.deleteAlbumById(request.params.id);
+      await this._albumService.deleteAlbumById(request.params.id);
 
       return {
         status: 'success',
