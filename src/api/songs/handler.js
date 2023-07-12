@@ -14,12 +14,12 @@ class SongsHandler {
     this._songValidator.validateSongPayload(request.payload);
 
     const {
-      title = 'untitled',
+      title,
       year,
       performer,
       genre,
       duration,
-      albumId = null,
+      albumId,
     } = request.payload;
 
     const songId = await this._songService.addSong({
