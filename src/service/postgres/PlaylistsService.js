@@ -19,7 +19,6 @@ class PlaylistsService {
     };
 
     const playlistResult = await this._pool.query(query);
-    console.log(playlistResult.rows[0]);
 
     if (!playlistResult.rows[0].id) {
       throw new InvariantError('Playlist gagal ditambahkan');
@@ -78,7 +77,6 @@ class PlaylistsService {
     const dataResult = await this._pool.query(query);
 
     if (!dataResult.rows.length) {
-      console.log('waduh');
       throw new NotFoundError('Playlist tidak ditemukan');
     }
 
