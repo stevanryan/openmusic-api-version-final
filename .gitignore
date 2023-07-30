@@ -21,6 +21,7 @@
 # from dicoding
 .env
 .prod.env
+src/api/uploads/file
 
 npm-debug.log*
 yarn-debug.log*
