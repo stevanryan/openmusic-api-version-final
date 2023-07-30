@@ -1,8 +1,18 @@
 // Mengimport .env dan menjalankan konfigurasi.
 require('dotenv').config();
 
+// hapi.
 const Hapi = require('@hapi/hapi');
+
+// hapi inert to serve requests using files
+// digunakan untuk melayani request berbentuk file serta melayani permintaan berbasis direktori.
+const Inert = require('@hapi/inert');
+
+// jwt.
 const Jwt = require('@hapi/jwt');
+
+// directory path.
+const path = require('path');
 
 // custom error exceptions.
 const ClientError = require('./exceptions/ClientError');
@@ -44,6 +54,11 @@ const collaborations = require('./api/collaborations');
 const CollaborationsService = require('./service/postgres/CollaborationsService');
 const CollaborationsValidator = require('./validator/collaborations');
 
+// uploads.
+const uploads = require('./api/uploads');
+const StorageService = require('./service/storage/StorageService');
+const UploadsValidator = require('./validator/uploads');
+
 const init = async () => {
   const albumsService = new AlbumsService();
   const songsService = new SongsService();
@@ -53,6 +68,9 @@ const init = async () => {
   const playlistActivitiesService = new PlaylistActivitiesService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
+
+  // __dirname berisi path lengkap dari direktori atau folder yang sedang dibuka.
+  const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/covers'));
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -68,6 +86,9 @@ const init = async () => {
   await server.register([
     {
       plugin: Jwt,
+    },
+    {
+      plugin: Inert,
     },
   ]);
 
@@ -136,6 +157,14 @@ const init = async () => {
         collaborationsService,
         playlistsService,
         validator: CollaborationsValidator,
+      },
+    },
+    {
+      plugin: uploads,
+      options: {
+        storageService,
+        albumsService,
+        validator: UploadsValidator,
       },
     },
   ]);
