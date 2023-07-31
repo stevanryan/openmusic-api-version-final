@@ -21,16 +21,16 @@ class UploadsHandler {
 
     const filename = await this._storageService.writeFile(cover, cover.hapi);
 
-    const fileNameAndLocation = `http://${config.app.host}:${config.app.port}/albums/${id}/covers/${filename}`;
+    const fileLocation = `http://${config.app.host}:${config.app.port}/albums/${id}/covers/${filename}`;
 
-    await this._albumsService.addAlbumCoverNameByAlbumId(fileNameAndLocation, id);
+    await this._albumsService.addAlbumCoverNameByAlbumId(fileLocation, id);
 
     const response = h.response({
       status: 'success',
       message: 'Sampul berhasil diunggah',
       data: {
         // Lokasi file dari gambar cover.
-        fileLocation: `http://${config.app.host}:${config.app.port}/albums/${id}/covers/${filename}`,
+        fileLocation,
       },
     });
     response.code(201); // Memberikan kode status dari response.
