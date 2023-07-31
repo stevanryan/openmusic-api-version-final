@@ -28,10 +28,6 @@ class UploadsHandler {
     const response = h.response({
       status: 'success',
       message: 'Sampul berhasil diunggah',
-      data: {
-        // Lokasi file dari gambar cover.
-        fileLocation,
-      },
     });
     response.code(201); // Memberikan kode status dari response.
     return response; // Mengembalikan response ke client.
