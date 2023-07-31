@@ -79,6 +79,19 @@ class AlbumsService {
       throw new InvariantError('Cover gagal ditambahkan');
     }
   }
+
+  async verifyAlbumExists(id) {
+    const query = {
+      text: 'SELECT id FROM albums WHERE id = $1',
+      values: [id],
+    };
+
+    const albumResult = await this._pool.query(query);
+
+    if (!albumResult.rows.length) {
+      throw new NotFoundError('Album tidak ditemukan');
+    }
+  }
 }
 
 module.exports = AlbumsService;
