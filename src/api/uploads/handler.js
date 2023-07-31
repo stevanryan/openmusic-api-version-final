@@ -21,7 +21,9 @@ class UploadsHandler {
 
     const filename = await this._storageService.writeFile(cover, cover.hapi);
 
-    await this._albumsService.addAlbumCoverNameByAlbumId(filename, id);
+    const fileNameAndLocation = `http://${config.app.host}:${config.app.port}/albums/${id}/covers/${filename}`;
+
+    await this._albumsService.addAlbumCoverNameByAlbumId(fileNameAndLocation, id);
 
     const response = h.response({
       status: 'success',
