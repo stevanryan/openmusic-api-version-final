@@ -59,7 +59,15 @@ const uploads = require('./api/uploads');
 const StorageService = require('./service/storage/StorageService');
 const UploadsValidator = require('./validator/uploads');
 
+// likes.
+const likes = require('./api/likes');
+const LikesService = require('./service/postgres/LikesService');
+
+// cache.
+const CacheService = require('./service/redis/CacheService');
+
 const init = async () => {
+  const cacheService = new CacheService();
   const albumsService = new AlbumsService();
   const songsService = new SongsService();
   const collaborationsService = new CollaborationsService();
@@ -68,6 +76,7 @@ const init = async () => {
   const playlistActivitiesService = new PlaylistActivitiesService();
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
+  const likesService = new LikesService(cacheService);
 
   // __dirname berisi path lengkap dari direktori atau folder yang sedang dibuka.
   const storageService = new StorageService(path.resolve(__dirname, 'api/uploads/file/covers'));
@@ -165,6 +174,13 @@ const init = async () => {
         storageService,
         albumsService,
         validator: UploadsValidator,
+      },
+    },
+    {
+      plugin: likes,
+      options: {
+        likesService,
+        albumsService,
       },
     },
   ]);
